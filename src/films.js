@@ -27,7 +27,9 @@ function moviesAverageOfDirector(moviesDirector, director) {
 
 // Exercise 4:  Alphabetic order by title 
 function orderAlphabetically(movies) {
-  const result = movies.sort((a, b) => a.title.localeCompare(b.title)).slice(0, 20);
+  const copiasPeliculas = [...movies];
+  const peliculas = copiasPeliculas.sort((a, b) => a.title.localeCompare(b.title)).slice(0, 20);
+  const result = peliculas.map(movie => movie.title);
   console.log("EXERCICE 4 ->", result);
   return result;
 }
@@ -50,9 +52,12 @@ function orderByYear(movies) {
 // Exercise 6: Calculate the average of the movies in a category
 function moviesAverageByCategory(movies, categoria) {
   const result = movies.filter(movie => movie.genre.includes(categoria));
-  const media = moviesAverage(result);
-  console.log("EXERCICE 6 ->", media.toFixed(2));
-  return media.toFixed(2);
+  const scores = result.map(movie => movie.score);
+  const validScores = scores.filter(score => typeof score === 'number');
+  const media = validScores.length > 0 ? validScores.reduce((sum, score) => sum + score) / validScores.length : 0;
+  const roundedMedia = Number(media.toFixed(2));
+  console.log("EXERCICE 6 ->", roundedMedia);
+  return roundedMedia;
 }
 
 function horasMinutos(duration) {
@@ -81,8 +86,8 @@ function hoursToMinutes(movies) {
 }
 
 // Exercise 8: Get the best film of a year
-function bestFilmOfYear(year) {
-  const peliculas = movies.filter(movie => movie.year == year);
+function bestFilmOfYear(movies, year) {
+  const peliculas = [...movies].filter(movie => movie.year == year);
 
   if (peliculas.length !== 0) {
     const mejorPelicula = peliculas.reduce((prevMovie, currentMovie) => {
@@ -90,12 +95,13 @@ function bestFilmOfYear(year) {
     });
 
     console.log("EXERCICE 8 ->", mejorPelicula);
-    return mejorPelicula;
+    return [mejorPelicula];
   } else {
     console.log(`No se encontraron películas para el año ${year}`);
-    return null;
+    return [];
   }
 }
+
 
 // The following is required to make unit tests work.
 /* Environment setup. Do not modify the below code. */
